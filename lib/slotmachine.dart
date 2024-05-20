@@ -146,15 +146,24 @@ class _SlotMachineState extends State<SlotMachine> {
     if (finish == true) {
       finish = false;
       // randomRotationTimeInSeconds = _random.nextInt(5) + 3;
-      randomRotationTimeInSeconds = 3;
+      randomRotationTimeInSeconds = 1;
 
-      final int left = _getWeightedRandomSlotIndex() - 1;
-      final int center = _getWeightedRandomSlotIndex() - 1;
-      final int right = _getWeightedRandomSlotIndex() - 1;
+      int left = _getWeightedRandomSlotIndex();
+      int center = _getWeightedRandomSlotIndex();
+      int right = _getWeightedRandomSlotIndex();
+      if (left == 0) {
+        left = 10;
+      }
+      if (center == 0) {
+        center = 10;
+      }
+      if (right == 0) {
+        right = 10;
+      }
       print('left = $left, center = $center, right = $right');
       startRotation = DateTime.now();
       rotator = Timer.periodic(_rotationTimeStep, _rotateRoller);
-      Future.delayed(Duration(seconds: 7)).whenComplete(() {
+      Future.delayed(Duration(seconds: 5)).whenComplete(() {
         setState(() {
           leftRoller.currentState?.smoothScrollToIndex(left,
               duration: _rotationTimeStep, curve: Curves.decelerate);

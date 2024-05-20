@@ -49,12 +49,12 @@ int _getWeightedRandomSlotIndex() {
   final double randomValue = _random.nextDouble();
   print('random value = $randomValue and target $targetProbability');
 
-  if (randomValue < targetProbability) {
-    return numSlots + 1; // Последний слот
+  if (randomValue <= targetProbability) {
+    return 10; // Последний слот
   } else {
     // Оставшиеся слоты
     double cumulativeProbability = targetProbability;
-    for (int i = 0; i < numSlots - 1; i++) {
+    for (int i = 0; i <= 9; i++) {
       cumulativeProbability += slotProbability;
       if (randomValue < cumulativeProbability) {
         return i;
