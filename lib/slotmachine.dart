@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:roller_list/roller_list.dart';
-part 'leska.dart';
-
-bool finish = true;
+part '/widgets/leska.dart';
+part 'variables.dart';
+part 'functions.dart';
 
 class SlotMachine extends StatefulWidget {
   @override
@@ -15,32 +15,6 @@ class SlotMachine extends StatefulWidget {
 }
 
 class _SlotMachineState extends State<SlotMachine> {
-  static const _rotationTimeStep = Duration(milliseconds: 100);
-  static const _rotationTimeStep2 = Duration(milliseconds: 100);
-  static const _rotationTimeStep3 = Duration(milliseconds: 100);
-  final List<Widget> slots = _getSlots();
-  final List<String> slotNames = [
-    "zero",
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "redJohn"
-  ];
-  int? first, second, third;
-  final leftRoller = GlobalKey<RollerListState>();
-  final centerRoller = GlobalKey<RollerListState>();
-  final rightRoller = GlobalKey<RollerListState>();
-  Timer? rotator;
-  final Random _random = Random();
-  int? randomRotationTimeInSeconds;
-  DateTime? startRotation;
-
   @override
   void initState() {
     first = 0;
@@ -174,9 +148,10 @@ class _SlotMachineState extends State<SlotMachine> {
       // randomRotationTimeInSeconds = _random.nextInt(5) + 3;
       randomRotationTimeInSeconds = 3;
 
-      final int left = _getWeightedRandomSlotIndex();
-      final int center = _getWeightedRandomSlotIndex();
-      final int right = _getWeightedRandomSlotIndex();
+      final int left = _getWeightedRandomSlotIndex() - 1;
+      final int center = _getWeightedRandomSlotIndex() - 1;
+      final int right = _getWeightedRandomSlotIndex() - 1;
+      print('left = $left, center = $center, right = $right');
       startRotation = DateTime.now();
       rotator = Timer.periodic(_rotationTimeStep, _rotateRoller);
       Future.delayed(Duration(seconds: 7)).whenComplete(() {
@@ -190,94 +165,5 @@ class _SlotMachineState extends State<SlotMachine> {
         });
       });
     }
-  }
-
-  void _rotateRoller(_) {
-    if (DateTime.now().difference(startRotation!).inSeconds >
-        randomRotationTimeInSeconds! + 3) {
-      finish = true;
-
-      animateController.stop();
-      _finishRotating();
-    } else if (DateTime.now().difference(startRotation!).inSeconds <=
-        randomRotationTimeInSeconds! - 3) {
-      final leftRotationTarget = _random.nextInt(3 * slots.length);
-
-      final centerRotationTarget = _random.nextInt(3 * slots.length);
-      final rightRotationTarget = _random.nextInt(3 * slots.length);
-
-      leftRoller.currentState?.smoothScrollToIndex(centerRotationTarget,
-          duration: _rotationTimeStep, curve: Curves.linear);
-      centerRoller.currentState?.smoothScrollToIndex(rightRotationTarget,
-          duration: _rotationTimeStep, curve: Curves.linear);
-      rightRoller.currentState?.smoothScrollToIndex(leftRotationTarget,
-          duration: _rotationTimeStep, curve: Curves.linear);
-    } else {
-      final leftRotationTarget = _random.nextInt(3 * slots.length);
-      final centerRotationTarget = _random.nextInt(3 * slots.length);
-      final rightRotationTarget = _random.nextInt(3 * slots.length);
-
-      leftRoller.currentState?.smoothScrollToIndex(centerRotationTarget,
-          duration: _rotationTimeStep, curve: Curves.decelerate);
-      centerRoller.currentState?.smoothScrollToIndex(rightRotationTarget,
-          duration: _rotationTimeStep, curve: Curves.decelerate);
-      rightRoller.currentState?.smoothScrollToIndex(leftRotationTarget,
-          duration: _rotationTimeStep, curve: Curves.decelerate);
-    }
-  }
-
-  void _finishRotating() {
-    rotator?.cancel();
-    rotator = null;
-  }
-
-  static List<Widget> _getSlots() {
-    List<Widget> result = [];
-    for (int i = 0; i <= 9; i++) {
-      result.add(Container(
-        padding: EdgeInsets.all(4.0),
-        color: Colors.red,
-        child: SvgPicture.asset(
-          "assets/hiQ_numbers/DarkGraffiti_$i.svg",
-          width: double.infinity,
-          height: double.infinity,
-        ),
-      ));
-    }
-    result.add(Container(
-      padding: EdgeInsets.all(4),
-      color: Colors.red,
-      child: SvgPicture.asset(
-        "assets/red_john.svg",
-      ),
-    ));
-    return result;
-  }
-
-  int _getWeightedRandomSlotIndex() {
-    final double targetProbability =
-        0.001; // 5% вероятность для последнего слота
-    final int numSlots = slots.length;
-    final double remainingProbability = 1.0 - targetProbability;
-    final double slotProbability = remainingProbability / (numSlots - 1);
-
-    // Генерируем случайное число от 0 до 1
-    final double randomValue = _random.nextDouble();
-    print('random value = $randomValue and target $targetProbability');
-
-    if (randomValue < targetProbability) {
-      return numSlots; // Последний слот
-    } else {
-      // Оставшиеся слоты
-      double cumulativeProbability = targetProbability;
-      for (int i = 0; i < numSlots - 1; i++) {
-        cumulativeProbability += slotProbability;
-        if (randomValue < cumulativeProbability) {
-          return i;
-        }
-      }
-    }
-
-    return numSlots - 1; // fallback на последний слот
   }
 }

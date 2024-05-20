@@ -1,4 +1,4 @@
-part of 'slotmachine.dart';
+part of '../slotmachine.dart';
 
 late AnimationController animateController;
 
