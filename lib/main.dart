@@ -74,7 +74,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: Colors.grey[600],
         body: Center(child: SlotMachine()),
       ),
     );

@@ -16,8 +16,8 @@ class SlotMachine extends StatefulWidget {
 
 class _SlotMachineState extends State<SlotMachine> {
   static const _rotationTimeStep = Duration(milliseconds: 100);
-  static const _rotationTimeStep2 = Duration(milliseconds: 800);
-  static const _rotationTimeStep3 = Duration(milliseconds: 2000);
+  static const _rotationTimeStep2 = Duration(milliseconds: 100);
+  static const _rotationTimeStep3 = Duration(milliseconds: 100);
   final List<Widget> slots = _getSlots();
   final List<String> slotNames = [
     "zero",
@@ -32,7 +32,7 @@ class _SlotMachineState extends State<SlotMachine> {
     "nine",
     "redJohn"
   ];
-  int? first, second, third, fourth;
+  int? first, second, third;
   final leftRoller = GlobalKey<RollerListState>();
   final centerRoller = GlobalKey<RollerListState>();
   final rightRoller = GlobalKey<RollerListState>();
@@ -46,7 +46,6 @@ class _SlotMachineState extends State<SlotMachine> {
     first = 0;
     second = 0;
     third = 0;
-    fourth = 0;
     super.initState();
   }
 
@@ -243,7 +242,7 @@ class _SlotMachineState extends State<SlotMachine> {
 
   int _getWeightedRandomSlotIndex() {
     final double targetProbability =
-        0.05; // 5% вероятность для последнего слота
+        0.001; // 5% вероятность для последнего слота
     final int numSlots = slots.length;
     final double remainingProbability = 1.0 - targetProbability;
     final double slotProbability = remainingProbability / (numSlots - 1);
