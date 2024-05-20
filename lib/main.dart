@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:roller_list/roller_list.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math';
-import 'dart:async';
 
 import 'package:slotmachine/slotmachine.dart';
 

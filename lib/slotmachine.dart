@@ -173,8 +173,22 @@ class _SlotMachineState extends State<SlotMachine> {
       finish = false;
       // randomRotationTimeInSeconds = _random.nextInt(5) + 3;
       randomRotationTimeInSeconds = 3;
+
+      final int left = _getWeightedRandomSlotIndex();
+      final int center = _getWeightedRandomSlotIndex();
+      final int right = _getWeightedRandomSlotIndex();
       startRotation = DateTime.now();
       rotator = Timer.periodic(_rotationTimeStep, _rotateRoller);
+      Future.delayed(Duration(seconds: 7)).whenComplete(() {
+        setState(() {
+          leftRoller.currentState?.smoothScrollToIndex(left,
+              duration: _rotationTimeStep, curve: Curves.decelerate);
+          centerRoller.currentState?.smoothScrollToIndex(center,
+              duration: _rotationTimeStep, curve: Curves.decelerate);
+          rightRoller.currentState?.smoothScrollToIndex(right,
+              duration: _rotationTimeStep, curve: Curves.decelerate);
+        });
+      });
     }
   }
 
@@ -185,30 +199,30 @@ class _SlotMachineState extends State<SlotMachine> {
 
       animateController.stop();
       _finishRotating();
-    } else if (DateTime.now().difference(startRotation!).inSeconds >
+    } else if (DateTime.now().difference(startRotation!).inSeconds <=
         randomRotationTimeInSeconds! - 3) {
-      final leftRotationTarget = _getWeightedRandomSlotIndex();
-      final centerRotationTarget = _getWeightedRandomSlotIndex();
-      final rightRotationTarget = _getWeightedRandomSlotIndex();
+      final leftRotationTarget = _random.nextInt(3 * slots.length);
+
+      final centerRotationTarget = _random.nextInt(3 * slots.length);
+      final rightRotationTarget = _random.nextInt(3 * slots.length);
+
+      leftRoller.currentState?.smoothScrollToIndex(centerRotationTarget,
+          duration: _rotationTimeStep, curve: Curves.linear);
+      centerRoller.currentState?.smoothScrollToIndex(rightRotationTarget,
+          duration: _rotationTimeStep, curve: Curves.linear);
+      rightRoller.currentState?.smoothScrollToIndex(leftRotationTarget,
+          duration: _rotationTimeStep, curve: Curves.linear);
+    } else {
+      final leftRotationTarget = _random.nextInt(3 * slots.length);
+      final centerRotationTarget = _random.nextInt(3 * slots.length);
+      final rightRotationTarget = _random.nextInt(3 * slots.length);
 
       leftRoller.currentState?.smoothScrollToIndex(centerRotationTarget,
           duration: _rotationTimeStep, curve: Curves.decelerate);
       centerRoller.currentState?.smoothScrollToIndex(rightRotationTarget,
-          duration: _rotationTimeStep2, curve: Curves.decelerate);
+          duration: _rotationTimeStep, curve: Curves.decelerate);
       rightRoller.currentState?.smoothScrollToIndex(leftRotationTarget,
-          duration: _rotationTimeStep3, curve: Curves.decelerate);
-    } else {
-      final leftRotationTarget = _getWeightedRandomSlotIndex();
-
-      final centerLeftRotationTarget = _getWeightedRandomSlotIndex();
-      final centerRightRotationTarget = _getWeightedRandomSlotIndex();
-
-      leftRoller.currentState?.smoothScrollToIndex(centerLeftRotationTarget,
-          duration: _rotationTimeStep, curve: Curves.linear);
-      centerRoller.currentState?.smoothScrollToIndex(centerRightRotationTarget,
-          duration: _rotationTimeStep, curve: Curves.linear);
-      rightRoller.currentState?.smoothScrollToIndex(leftRotationTarget,
-          duration: _rotationTimeStep, curve: Curves.linear);
+          duration: _rotationTimeStep, curve: Curves.decelerate);
     }
   }
 
@@ -249,6 +263,7 @@ class _SlotMachineState extends State<SlotMachine> {
 
     // Генерируем случайное число от 0 до 1
     final double randomValue = _random.nextDouble();
+    print('random value = $randomValue and target $targetProbability');
 
     if (randomValue < targetProbability) {
       return numSlots; // Последний слот
