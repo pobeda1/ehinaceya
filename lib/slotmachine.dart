@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:roller_list/roller_list.dart';
+import 'widgets/ui/alum_rectangle.dart';
 part '/widgets/leska.dart';
 part 'variables.dart';
 part 'functions.dart';
@@ -33,30 +34,18 @@ class _SlotMachineState extends State<SlotMachine> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text(
-          'Slot Machine',
-          textScaler: TextScaler.linear(1.5),
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 16.0,
+        const SizedBox(
+          height: 30.0,
         ),
         Container(
           width: 300,
           child: Stack(
             children: <Widget>[
-              GestureDetector(
-                onTap: _startRotating,
-                child: Image.asset(
-                  'assets/images/slot-machine.jpg',
-                  width: 400,
-                  height: 400,
-                ),
-              ),
+              const AluminumRectangle(),
               Positioned(
-                left: 94,
-                right: 94,
-                bottom: 90,
+                left: 20,
+                right: 20,
+                top: 50,
                 child: Container(
                   width: double.infinity,
                   height: 40,
